@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"> 
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <div id="cart">
+        <!-- Sample items -->
+        <div class="item">
+            <span>Item 1</span>
+            <button class="quantity" onclick="decreaseQuantity(0)">-</button>
+            <span id="quantity_0">1</span>
+            <button class="quantity" onclick="increaseQuantity(0)">+</button>
+            <button onclick="removeItem(0)">Delete</button>
+            <button onclick="likeItem(0)"><i class="fa-solid fa-heart"></i></button>
+        </div>
+        <div class="item">
+            <span>Item 2</span>
+            <button class="quantity" onclick="decreaseQuantity(1)">-</button>
+            <span id="quantity_1">1</span>
+            <button class="quantity" onclick="increaseQuantity(1)">+</button>
+            <button onclick="removeItem(1)">Delete</button>
+            <button onclick="likeItem(1)"><i class="fa-solid fa-heart"></i></button>
+        </div>
+    </div>
+    <div>
+        <h3>Total Price: <span id="totalPrice">0</span></h3>
+    </div>
+    
+    <script>
+        // Sample item data
+        const items = [
+            { name: "Item 1", price: 10 },
+            { name: "Item 2", price: 20 }
+        ];
+    
+        // Initialize total price
+        let totalPrice = 0;
+    
+        // Function to update total price
+        function updateTotalPrice() {
+            document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
+        }
+    
+        // Function to increase quantity
+        function increaseQuantity(index) {
+            const quantityElement = document.getElementById(`quantity_${index}`);
+            let quantity = parseInt(quantityElement.textContent);
+            quantity++;
+            quantityElement.textContent = quantity;
+            totalPrice += items[index].price;
+            updateTotalPrice();
+        }
+    
+        // Function to decrease quantity
+        function decreaseQuantity(index) {
+            const quantityElement = document.getElementById(`quantity_${index}`);
+            let quantity = parseInt(quantityElement.textContent);
+            if (quantity > 1) {
+                quantity--;
+                quantityElement.textContent = quantity;
+                totalPrice -= items[index].price;
+                updateTotalPrice();
+            }
+        }
+    
+        // Function to remove item
+        function removeItem(index) {
+            const item = document.querySelector(`#cart .item:nth-child(${index + 1})`);
+            const quantity = parseInt(document.getElementById(`quantity_${index}`).textContent);
+            const priceToRemove = quantity * items[index].price;
+            totalPrice -= priceToRemove;
+            updateTotalPrice();
+            item.remove();
+        }
+    
+        // Function to like item
+        function likeItem(index) {
+            const likeButton = document.querySelector(`#cart .item:nth-child(${index + 1}) button:last-child`);
+            likeButton.style.color = likeButton.style.color === 'red' ? 'black' : 'red';
+        }
+    
+        // Initial total price calculation
+        items.forEach(item => {
+            totalPrice += item.price;
+        });
+        updateTotalPrice();
+    </script>
+    </body>
+    </html>
